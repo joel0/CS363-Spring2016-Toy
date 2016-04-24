@@ -1,5 +1,9 @@
 ﻿Module Tools
 
+    Enum operators
+        equal = AscW("="c)
+    End Enum
+
     Public Function pluralize(word As String, count As Integer) As String
         If Math.Abs(count) = 1 Then
             Return word

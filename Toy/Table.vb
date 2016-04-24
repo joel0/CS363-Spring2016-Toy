@@ -12,11 +12,10 @@ Public Class Table
             Return records.Count
         End Get
     End Property
-    Public columns As New List(Of Column)
+    Public columns As New ColumnList
     Public records As New List(Of Tuple)
 
     Public Sub New()
-
     End Sub
 
     Public Sub New(input As String)
@@ -95,5 +94,36 @@ Public Class Table
         Dim contents As String = ToString("f")
         My.Computer.FileSystem.WriteAllText(name, contents, False)
     End Sub
+
+    Public Function search(condition As String) As Tuple()
+        Dim parts As String() = condition.Split(" ", options:=StringSplitOptions.RemoveEmptyEntries)
+
+        If parts.Count <> 3 Then
+            Throw New Exception("Expected 3 part condition")
+        End If
+
+        Dim col As Integer = -1
+        Dim op As Tools.operators
+        Dim val As Object
+
+        For i As Integer = 0 To columns.Count - 1
+            If parts(0).Equals(columns(i).name, StringComparison.CurrentCultureIgnoreCase) Then
+                col = i
+            End If
+        Next
+        If col = -1 Then
+            Throw New Exception("Column does not exist")
+        End If
+
+        If parts(1) = ChrW(Tools.operators.equal).ToString Then
+            op = operators.equal
+        Else
+            Throw New Exception("Invalid operator")
+        End If
+
+        val = columns(col).valToObj(parts(2))
+
+        Return records.FindAll(Function(t As Tuple) t.values(col).Equals(val)).ToArray
+    End Function
 
 End Class

@@ -26,7 +26,7 @@ Public Class Tuple
                 If values.Count = parent.numberOfAttributes Then
                     Throw New Exception("Number of records does not match the table definition")
                 End If
-                values.Add(valToObj(sb.ToString, values.Count))
+                values.Add(parent.columns(values.Count).valToObj(sb.ToString))
                 sb.Clear()
             Else
                 If ChrW(val) = "\"c Then
@@ -89,33 +89,6 @@ Public Class Tuple
             Return CType(val, String).Replace("\", "\\").Replace("|", "\|").Replace("{", "\{").Replace("}", "\}")
         End If
         Return val
-    End Function
-
-    Private Function valToObj(val As String, index As Integer) As Object
-        Dim out As Object
-        Select Case parent.columns(index).type
-            Case Column.dataType.integer
-                out = New Integer
-                If Not Integer.TryParse(val, out) Then
-                    Throw New Exception("Numeric value expected in tuple")
-                End If
-            Case Column.dataType.double
-                out = New Double
-                If Not Double.TryParse(val, out) Then
-                    Throw New Exception("Double value expected in tuple")
-                End If
-            Case Column.dataType.boolean
-                If val = "T" Then
-                    out = True
-                ElseIf val = "F" Then
-                    out = False
-                Else
-                    Throw New Exception("T or F expected as boolean in tuple")
-                End If
-            Case Column.dataType.string
-                out = val
-        End Select
-        Return out
     End Function
 
 End Class

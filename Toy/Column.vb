@@ -1,4 +1,6 @@
-﻿Public Class Column
+﻿Imports Toy
+
+Public Class Column
     Public Enum dataType
         [integer] = 1
         [double] = 2
@@ -47,4 +49,45 @@
             Return ToString()
         End If
     End Function
+
+    Public Function valToObj(val As String) As Object
+        Dim out As Object
+        Select Case type
+            Case Column.dataType.integer
+                out = New Integer
+                If Not Integer.TryParse(val, out) Then
+                    Throw New Exception("Numeric value expected")
+                End If
+            Case Column.dataType.double
+                out = New Double
+                If Not Double.TryParse(val, out) Then
+                    Throw New Exception("Double value expected")
+                End If
+            Case Column.dataType.boolean
+                If val = "T" Then
+                    out = True
+                ElseIf val = "F" Then
+                    out = False
+                Else
+                    Throw New Exception("T or F expected as boolean")
+                End If
+            Case Column.dataType.string
+                out = val
+            Case Else
+                out = val
+        End Select
+        Return out
+    End Function
+
+End Class
+
+Public Class ColumnList
+    Inherits ObjectModel.Collection(Of Column)
+
+    Protected Overrides Sub InsertItem(index As Integer, item As Column)
+        If Me.Any(Function(c As Column) c.name = item.name) Then
+            Throw New Exception("Duplicate column name")
+        End If
+        MyBase.InsertItem(index, item)
+    End Sub
 End Class

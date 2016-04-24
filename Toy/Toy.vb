@@ -20,10 +20,10 @@
 
         'Console.Write(ta.ToString("f"))
 
-        Dim t As New Tuple(ta, "{test|-10|T}")
-        ta.records.Add(t)
-        Console.WriteLine(ta.ToString("f"))
-        ta.saveToFile("abc.tb")
+        'Dim t As New Tuple(ta, "{test|-10|T}")
+        'ta.records.Add(t)
+        Console.WriteLine(ta.search("thsa =  10").Last)
+        'ta.saveToFile("abc.tb")
 
         Console.ReadKey()
     End Sub
