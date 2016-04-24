@@ -86,4 +86,14 @@ Public Class Table
         End If
     End Function
 
+    Public Shared Function readFromFile(name As String) As Table
+        Dim contents As String = My.Computer.FileSystem.ReadAllText(name)
+        Return New Table(contents)
+    End Function
+
+    Public Sub saveToFile(name As String)
+        Dim contents As String = ToString("f")
+        My.Computer.FileSystem.WriteAllText(name, contents, False)
+    End Sub
+
 End Class
