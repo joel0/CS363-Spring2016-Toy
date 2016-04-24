@@ -61,7 +61,11 @@
     End Sub
 
     Private Sub displayRecord(fileName As String, rid As Integer)
-
+        Dim tb As Table = Table.readFromFile(fileName)
+        If rid >= tb.numberOfRecords Or rid < 0 Then
+            Throw New Exception("rid out of bounds")
+        End If
+        Console.WriteLine(tb.records(rid))
     End Sub
 
     Private Sub deleteRecord(fileName As String, rid As Integer)
