@@ -20,15 +20,13 @@ Public Class Tuple
         Dim inStr As New IO.StringReader(input)
         Dim val As Integer
         Dim sb As New StringBuilder
-        Dim i As Integer = 0
         Do
             val = inStr.Read
             If val = -1 OrElse ChrW(val) = "|" Then
-                If i = parent.numberOfAttributes Then
+                If values.Count = parent.numberOfAttributes Then
                     Throw New Exception("Number of records does not match the table definition")
                 End If
-                values.Add(valToObj(sb.ToString, i))
-                i += 1
+                values.Add(valToObj(sb.ToString, values.Count))
                 sb.Clear()
             Else
                 If ChrW(val) = "\"c Then
@@ -51,7 +49,7 @@ Public Class Tuple
             End If
         Loop While val <> -1
         If values.Count <> parent.numberOfAttributes Then
-            Throw New Exception("Number of records does not match the table definition")
+            Throw New Exception("Number of attributes does not match the table definition")
         End If
     End Sub
 
