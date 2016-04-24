@@ -5,7 +5,6 @@
 
         If args.Count < 2 Then
             showUsage()
-            Return
         End If
 
         Try
@@ -31,10 +30,11 @@
                         deleteRecord(args(2), rid)
                     ElseIf args(0).Equals("search", StringComparison.CurrentCultureIgnoreCase) Then
                         search(args(2), args(1))
+                    Else
+                        showUsage()
                     End If
                 Else
                     showUsage()
-                    Return
                 End If
             End If
         Catch ex As Exception
@@ -57,7 +57,17 @@
     End Sub
 
     Private Sub insertInteractive(fileName As String)
-
+        Dim tb As Table = Table.readFromFile(fileName)
+        Dim newTuple As New Tuple(tb)
+        Dim val As String
+        For i As Integer = 0 To tb.columns.Count - 1
+            Console.Write("{0}: ", tb.columns(i).name)
+            val = Console.ReadLine
+            newTuple.values.Add(tb.columns(i).valToObj(val))
+        Next
+        tb.records.Add(newTuple)
+        Console.Write("New record added")
+        tb.saveToFile(fileName)
     End Sub
 
     Private Sub displayRecord(fileName As String, rid As Integer)

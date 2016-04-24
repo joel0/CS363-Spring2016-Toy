@@ -27,6 +27,9 @@ Public Class Table
 
         line = reader.ReadLine
         Dim matches As RegularExpressions.MatchCollection = RegularExpressions.Regex.Matches(line, "\[(?<val>[\w\d:]*)\]")
+        If matches.Count < 2 Then
+            Throw New Exception("Invalid header")
+        End If
         If Not Integer.TryParse(matches(0).Groups("val").Value, expectedAttributes) Then
             Throw New Exception("Attribute count must be an integer")
         End If
@@ -106,6 +109,9 @@ Public Class Table
 
             line = reader.ReadLine
             Dim matches As RegularExpressions.MatchCollection = RegularExpressions.Regex.Matches(line, "\[(?<val>[\w\d:]*)\]")
+            If matches.Count < 2 Then
+                Throw New Exception("Invalid header")
+            End If
             If Not Integer.TryParse(matches(0).Groups("val").Value, expectedAttributes) Then
                 Throw New Exception("Attribute count must be an integer")
             End If
