@@ -69,7 +69,13 @@
     End Sub
 
     Private Sub deleteRecord(fileName As String, rid As Integer)
-
+        Dim tb As Table = Table.readFromFile(fileName)
+        If rid >= tb.numberOfRecords Or rid < 0 Then
+            Throw New Exception("rid out of bounds")
+        End If
+        tb.records.RemoveAt(rid)
+        Console.WriteLine("Record {0} deleted", rid)
+        tb.saveToFile(fileName)
     End Sub
 
     Private Sub search(fileName As String, condition As String)
