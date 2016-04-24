@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports Toy
 
 Public Class Tuple
 
@@ -89,6 +90,25 @@ Public Class Tuple
             Return CType(val, String).Replace("\", "\\").Replace("|", "\|").Replace("{", "\{").Replace("}", "\}")
         End If
         Return val
+    End Function
+
+End Class
+
+Public Class TupleList
+    Inherits List(Of Tuple)
+
+    Public Overrides Function ToString() As String
+        Dim out As New StringBuilder
+        For Each t As Tuple In Me
+            out.AppendLine(t.ToString)
+        Next
+        Return out.ToString
+    End Function
+
+    Public Overloads Function FindAll(match As Predicate(Of Tuple)) As TupleList
+        Dim o As New TupleList
+        o.AddRange(MyBase.FindAll(match))
+        Return o
     End Function
 
 End Class

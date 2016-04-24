@@ -79,7 +79,8 @@
     End Sub
 
     Private Sub search(fileName As String, condition As String)
-
+        Dim tb As Table = Table.readFromFile(fileName)
+        Console.Write(tb.search(condition))
     End Sub
 
 End Module

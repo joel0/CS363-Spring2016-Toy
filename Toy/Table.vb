@@ -13,7 +13,7 @@ Public Class Table
         End Get
     End Property
     Public columns As New ColumnList
-    Public records As New List(Of Tuple)
+    Public records As New TupleList
 
     Public Sub New()
     End Sub
@@ -132,7 +132,7 @@ Public Class Table
         My.Computer.FileSystem.WriteAllText(name, contents, False)
     End Sub
 
-    Public Function search(condition As String) As Tuple()
+    Public Function search(condition As String) As TupleList
         Dim parts As String() = condition.Split(" ", options:=StringSplitOptions.RemoveEmptyEntries)
 
         If parts.Count <> 3 Then
@@ -160,7 +160,7 @@ Public Class Table
 
         val = columns(col).valToObj(parts(2))
 
-        Return records.FindAll(Function(t As Tuple) t.values(col).Equals(val)).ToArray
+        Return records.FindAll(Function(t As Tuple) t.values(col).Equals(val))
     End Function
 
 End Class
