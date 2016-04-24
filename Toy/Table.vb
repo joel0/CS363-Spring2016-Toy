@@ -58,13 +58,7 @@ Public Class Table
     End Sub
 
     Public Overrides Function ToString() As String
-        Dim out As New StringBuilder
-        out.AppendLine(String.Format("{0} {1}", numberOfAttributes, Tools.pluralize("attribute", numberOfAttributes)))
-        For i As Integer = 0 To numberOfAttributes - 1
-            out.AppendLine(String.Format("Attribute {0}: {1}", i, columns(i)))
-        Next
-        out.Append(String.Format("{0} {1}", numberOfRecords, Tools.pluralize("record", numberOfRecords)))
-        Return out.ToString
+        Return buildFriendlyOutput(numberOfAttributes, numberOfRecords, columns)
     End Function
 
     Public Overloads Function ToString(format As String) As String
@@ -85,9 +79,52 @@ Public Class Table
         End If
     End Function
 
+    Private Shared Function buildFriendlyOutput(numAttributes As Integer, numRecords As Integer, cols As ColumnList) As String
+        Dim out As New StringBuilder
+        out.AppendLine(String.Format("{0} {1}", numAttributes, Tools.pluralize("attribute", numAttributes)))
+        For i As Integer = 0 To numAttributes - 1
+            out.AppendLine(String.Format("Attribute {0}: {1}", i, cols(i)))
+        Next
+        out.Append(String.Format("{0} {1}", numRecords, Tools.pluralize("record", numRecords)))
+        Return out.ToString
+    End Function
+
     Public Shared Function readFromFile(name As String) As Table
         Dim contents As String = My.Computer.FileSystem.ReadAllText(name)
         Return New Table(contents)
+    End Function
+
+    Public Shared Function getHeaderFromFile(name As String) As String
+        Dim stream As New IO.FileStream(name, IO.FileMode.Open)
+        Try
+            Dim reader As New IO.StreamReader(stream)
+            Dim line As String
+            Dim expectedAttributes As Integer
+            Dim expectedRecords As Integer
+            Dim headerLen As Integer = 0
+            Dim cols As New ColumnList
+
+            line = reader.ReadLine
+            Dim matches As RegularExpressions.MatchCollection = RegularExpressions.Regex.Matches(line, "\[(?<val>[\w\d:]*)\]")
+            If Not Integer.TryParse(matches(0).Groups("val").Value, expectedAttributes) Then
+                Throw New Exception("Attribute count must be an integer")
+            End If
+            If Not Integer.TryParse(matches(matches.Count - 1).Groups("val").Value, expectedRecords) Then
+                Throw New Exception("Record count must be an integer")
+            End If
+            headerLen += matches(0).Length + matches(matches.Count - 1).Length
+            For i As Integer = 1 To matches.Count - 2
+                cols.Add(New Column(matches(i).Value))
+                headerLen += matches(i).Length
+            Next
+            If headerLen <> line.Length Then
+                Throw New Exception("Junk in header")
+            End If
+
+            Return buildFriendlyOutput(expectedAttributes, expectedRecords, cols)
+        Finally
+            stream.Close()
+        End Try
     End Function
 
     Public Sub saveToFile(name As String)
