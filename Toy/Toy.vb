@@ -40,8 +40,6 @@
         Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
-
-        Console.ReadKey()
     End Sub
 
     Private Sub showUsage()
