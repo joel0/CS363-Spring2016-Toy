@@ -19,7 +19,7 @@
         If input.First <> "["c Or input.Last <> "]"c Then
             Throw New Exception("[ and ] expected on column")
         End If
-        input = Mid(input, 1, input.Length - 2)
+        input = Mid(input, 2, input.Length - 2)
 
         ' Split on :
         Dim parts() As String = input.Split(":")
