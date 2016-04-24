@@ -99,6 +99,7 @@ Public Class TupleList
 
     Public Overrides Function ToString() As String
         Dim out As New StringBuilder
+        out.AppendFormat("{0} matching {1} found" & vbCrLf & vbCrLf, Count, Tools.pluralize("record", Count))
         For Each t As Tuple In Me
             out.AppendLine(t.ToString)
         Next

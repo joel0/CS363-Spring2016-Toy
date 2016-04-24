@@ -49,7 +49,30 @@
     End Sub
 
     Private Sub createTableInteractive(fileName As String)
+        Dim tb As New Table
+        Dim attName As String
+        Dim typeStr As String
+        Dim type As Column.dataType
+        ' Check permissions and syntax
+        tb.saveToFile(fileName)
 
+        Do
+            Console.Write("Attribute name: ")
+            attName = Console.ReadLine()
+            Console.Write("Select a type (1. integer; 2. double; 3. boolean; 4. string): ")
+            typeStr = Console.ReadLine
+            If Not Integer.TryParse(typeStr, type) Then
+                Throw New Exception("Type must be an integer")
+            End If
+            If type < 1 OrElse type > 4 Then
+                Throw New Exception("Invalid type")
+            End If
+            tb.columns.Add(New Column(attName, type))
+
+            Console.Write("More attributes? [y/N] ")
+        Loop While Console.ReadLine.Equals("y", StringComparison.CurrentCultureIgnoreCase)
+        tb.saveToFile(fileName)
+        Console.WriteLine("Created new table")
     End Sub
 
     Private Sub showHeader(fileName As String)
