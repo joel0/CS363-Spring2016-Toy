@@ -44,6 +44,14 @@
 
     Private Sub showUsage()
         Console.WriteLine("Usage")
+        Console.WriteLine("-----")
+        Console.WriteLine()
+        Console.WriteLine("toy create file_name")
+        Console.WriteLine("toy header file_name")
+        Console.WriteLine("toy insert file_name")
+        Console.WriteLine("toy display record_id file_name")
+        Console.WriteLine("toy delete record_id file_name")
+        Console.WriteLine("toy search ""condition"" file_name")
     End Sub
 
     Private Sub createTableInteractive(fileName As String)
